@@ -24,23 +24,29 @@ def loadModule(script):
     loader = SourceFileLoader(moduleName, script)
     spec = importlib.util.spec_from_file_location(moduleName, loader=loader)
     module = importlib.util.module_from_spec(spec)
-    sys.modules[moduleName] = module  # Not necessary but convenient.
+    sys.modules[moduleName] = module
     spec.loader.exec_module(module)
     return module
 
 
-def getImportedModules(archtypeModule):
-    """Extract the imported modules imported within the given archtype module.
+def getImportedModules(archetypeModule):
+    """Extract the modules imported within the given archtype module.
 
     Args:
-        archtypeModule (module): The archtype that builds the rig.
+        archetypeModule (module): The archtype that builds the rig.
 
     Returns:
         list[module]: Contains the imported modules.
     """
     modules = []
-    for name, obj in inspect.getmembers(archtypeModule):
-        if name == "__builtins__" or not inspect.ismodule(obj):
+    for name, obj in inspect.getmembers(archetypeModule):
+        if name == "__builtins__":
+            continue
+        if not inspect.ismodule(obj):
+            if not inspect.isclass(obj) and not inspect.isfunction(obj):
+                continue
+            module = inspect.getmodule(obj)
+            modules.append(module)
             continue
         modules.append(obj)
     return modules
@@ -57,7 +63,6 @@ def getLibraryVersion(module):
     """
     if module.__package__:
         libraryName = module.__package__.split(".")[0]
-        print(libraryName)
 
         # Get version data for internal libraries.
         if libraryName in os.listdir(INSTALL_PATH):
