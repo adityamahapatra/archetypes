@@ -86,7 +86,7 @@ def getLibraryVersion(module):
 
 if __name__ == "__main__":
     # Temporary script path. Actual script path would be derived from from the released Tessa asset (pythonScript).
-    SCRIPT = "/home/aditya/Dev/projects/archetypes/src/charGenericRobot/AvA/LodA/archtype.py"
+    SCRIPT = "/home/aditya/Dev/projects/archetypes/src/charGenericRobot/AvA/Archetypes/LodA/v1.py"
 
     versionMap = {}
     archtype = loadModule(SCRIPT)
